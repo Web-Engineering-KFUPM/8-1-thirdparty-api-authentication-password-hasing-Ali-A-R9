@@ -287,7 +287,11 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Wrong password" });
     }
 
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     return res.json({ token });
   } catch (err) {
@@ -308,12 +312,7 @@ app.get("/weather", async (req, res) => {
       return res.status(401).json({ error: "Missing token" });
     }
 
-    const parts = auth.split(" ");
-    if (parts.length !== 2 || parts[0] !== "Bearer") {
-      return res.status(401).json({ error: "Invalid token format" });
-    }
-
-    const token = parts[1];
+    const token = auth.split(" ")[1];
 
     try {
       jwt.verify(token, JWT_SECRET);
@@ -349,6 +348,6 @@ app.get("/weather", async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`Server running at http://localhost:${PORT}`)
+);
